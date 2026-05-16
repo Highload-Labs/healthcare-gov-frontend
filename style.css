@@ -1,0 +1,338 @@
+/* =============================================
+   style.css — Create an Account Form
+   ============================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- CSS Variables ---- */
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #555;
+  --border: #cccccc;
+  --border-focus: #0070d2;
+  --accent: #2e7d32;
+  --accent-hover: #1b5e20;
+  --link: #0070d2;
+  --step-bg: #1a1a1a;
+  --step-text: #fff;
+  --input-bg: #fff;
+  --shadow-focus: 0 0 0 3px rgba(0, 112, 210, 0.18);
+}
+
+/* ---- Base ---- */
+body {
+  background: var(--bg);
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 48px 24px 80px;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ---- Page Header ---- */
+.page-title {
+  font-family: 'Merriweather', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.login-prompt {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.login-prompt a {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-prompt a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Step Section ---- */
+.step-section {
+  margin-bottom: 40px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.step-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--step-bg);
+  color: var(--step-text);
+  font-family: 'Merriweather', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-family: 'Merriweather', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.step-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding-left: 48px;
+}
+
+.step-body {
+  padding-left: 48px;
+}
+
+/* ---- Form Fields ---- */
+.field-group {
+  margin-bottom: 22px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* ---- TEXTFIELD ---- */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  max-width: 380px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--input-bg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"].active-field {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+/* ---- DROPDOWN LIST ---- */
+select {
+  width: 100%;
+  max-width: 220px;
+  padding: 9px 36px 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem;
+  color: #666;
+  background: var(--input-bg)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+  color: var(--text);
+}
+
+/* ---- Password Rules ---- */
+.pw-rules {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  line-height: 1.7;
+  list-style: disc;
+  padding-left: 18px;
+}
+
+.pw-rules li {
+  margin-bottom: 1px;
+}
+
+/* ---- CHECKLIST ---- */
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 28px 0 20px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 3px;
+  appearance: none;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background: var(--border-focus);
+  border-color: var(--border-focus);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 8px;
+  height: 13px;
+  border: 2.5px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(43deg);
+}
+
+.checkbox-group label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.checkbox-group label a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.checkbox-group label a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Email Note ---- */
+.email-note {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 28px;
+  max-width: 520px;
+  padding-left: 48px;
+}
+
+/* ---- BUTTON CREATE ---- */
+.btn-create {
+  display: inline-block;
+  padding: 10px 22px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: background 0.18s, transform 0.1s;
+  margin-left: 48px;
+}
+
+.btn-create:hover {
+  background: var(--accent-hover);
+}
+
+.btn-create:active {
+  transform: scale(0.98);
+}
+
+/* ---- Divider ---- */
+.step-divider {
+  border: none;
+  border-top: 1px solid #e8e8e8;
+  margin: 32px 0;
+}
+
+/* ---- Legend / Peta Elemen ---- */
+.legend {
+  margin-top: 50px;
+  padding: 20px 24px;
+  background: #f7f9fc;
+  border: 1px solid #dde3eb;
+  border-radius: 6px;
+}
+
+.legend h3 {
+  font-family: 'Merriweather', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.legend-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-list li {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  min-width: 110px;
+  text-align: center;
+}
+
+.badge-textfield { background: #e3f0ff; color: #0050a0; }
+.badge-dropdown  { background: #fff3e0; color: #a04f00; }
+.badge-checklist { background: #e8f5e9; color: #2e7d32; }
+.badge-button    { background: #fce4ec; color: #b71c1c; }
