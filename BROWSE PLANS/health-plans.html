@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Plans - Malik UMM</title>
+<link rel="stylesheet" href="../BROWSE PLANS/health-plans.css">
+</head>
+<body>
+
+<div class="bg-pattern">
+  <svg viewBox="0 0 1366 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" stroke-width="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="1366" height="800" fill="url(#grid)"/>
+    <circle cx="120" cy="200" r="90" fill="none" stroke="white" stroke-width="1"/>
+    <circle cx="120" cy="200" r="140" fill="none" stroke="white" stroke-width="0.5"/>
+    <circle cx="350" cy="650" r="70" fill="none" stroke="white" stroke-width="1"/>
+    <circle cx="350" cy="650" r="110" fill="none" stroke="white" stroke-width="0.5"/>
+    <circle cx="900" cy="100" r="60" fill="none" stroke="white" stroke-width="0.8"/>
+    <circle cx="1250" cy="700" r="80" fill="none" stroke="white" stroke-width="0.8"/>
+    <line x1="0" y1="0" x2="200" y2="200" stroke="white" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="0" y2="200" stroke="white" stroke-width="0.5"/>
+    <rect x="700" y="500" width="120" height="120" fill="none" stroke="white" stroke-width="0.5" transform="rotate(20 760 560)"/>
+    <rect x="1100" y="200" width="90" height="90" fill="none" stroke="white" stroke-width="0.5" transform="rotate(35 1145 245)"/>
+  </svg>
+</div>
+
+<div class="left-panel">
+</div>
+
+<div class="right-panel">
+  <div class="modal-card">
+    <h1>See plans &amp; prices</h1>
+    <p class="subtitle">Get estimated prices on 2026 health plans before you apply</p>
+    <p class="subtitle">You can browse plans and estimated prices here any time. Next, <a href="#">create</a> or <a href="#">login to your marketplace</a> to apply, get final prices, and enroll.</p>
+
+    <div class="alert-box">
+      <div class="alert-title">Life changes? You can still get 2026 health insurance</div>
+      <div class="alert-body">You can enroll or change plans only if you have certain <a href="#">life changes</a>, or qualify for Medicaid or the Children's Health Insurance Program (CHIP).</div>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label" for="zipCode">Enter your ZIP Code &amp; choose your location:</label>
+      <div class="input-row">
+        <input
+          type="text"
+          id="zipCode"
+          class="zip-input"
+          placeholder="e.g. 10001"
+          maxlength="5"
+          inputmode="numeric"
+          pattern="[0-9]*"
+        />
+        <button class="btn-continue" onclick="handleContinue()">CONTINUE</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="footer-note">Your information is protected and never shared without consent.</p>
+  </div>
+</div>
+
+<script>
+  function handleContinue() {
+    const zip = document.getElementById('zipCode').value.trim();
+    if (!zip || zip.length < 5) {
+      document.getElementById('zipCode').focus();
+      document.getElementById('zipCode').style.borderColor = '#ef4444';
+      document.getElementById('zipCode').style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+      setTimeout(() => {
+        document.getElementById('zipCode').style.borderColor = '#d1d5db';
+        document.getElementById('zipCode').style.boxShadow = 'none';
+      }, 1500);
+      return;
+    }
+    alert('Mencari rencana untuk ZIP Code: ' + zip);
+  }
+
+  document.getElementById('zipCode').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+  });
+
+  document.getElementById('zipCode').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleContinue();
+  });
+</script>
+</body>
+</html>
