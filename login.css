@@ -1,0 +1,250 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #555;
+  --border: #cccccc;
+  --border-focus: #0070d2;
+  --accent: #2e7d32;
+  --accent-hover: #1b5e20;
+  --link: #0070d2;
+  --step-bg: #1a1a1a;
+  --step-text: #fff;
+  --input-bg: #fff;
+  --shadow-focus: 0 0 0 3px rgba(0, 112, 210, 0.18);
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  background: #ffffff;
+  color: #111827;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 672px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+/* ── Header ── */
+h1 {
+  font-family: 'Merriweather', serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 2.5rem;
+}
+
+.subtitle a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.subtitle a:hover {
+  text-decoration: underline;
+}
+
+/* ── Step section ── */
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.step-badge {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #111827;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: 'Merriweather', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+/* ── Fields ── */
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+input[type="email"],
+input[type="password"] {
+  display: block;
+  width: 100%;
+  max-width: 448px;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #9ca3af;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #1a5fa8;
+  box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.18);
+}
+
+.error-msg {
+  display: none;
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+}
+
+.error-msg.visible {
+  display: block;
+}
+
+.forgot-link {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #1d4ed8;
+  text-decoration: none;
+  margin-top: 0.25rem;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Checkbox ── */
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 576px;
+  margin-bottom: 0.75rem;
+}
+
+.checkbox-row input[type="checkbox"] {
+  margin-top: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  accent-color: #166534;
+  cursor: pointer;
+}
+
+.checkbox-row label {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #1f2937;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.checkbox-row a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.checkbox-row a:hover {
+  text-decoration: underline;
+}
+
+/* ── Info text ── */
+.info-text {
+  font-size: 0.75rem;
+  color: #6b7280;
+  max-width: 576px;
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Button ── */
+.btn-login {
+  height: 3rem;
+  padding: 0 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #ffffff;
+  background: #166534;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-login:hover:not(:disabled) {
+  background: #14532d;
+}
+
+.btn-login:active:not(:disabled) {
+  background: #052e16;
+}
+
+.btn-login:disabled {
+  background: #28844a;
+  cursor: not-allowed;
+}
+
+/* ── API error ── */
+.api-error {
+  display: none;
+  font-size: 0.875rem;
+  color: #dc2626;
+  margin-top: 0.75rem;
+}
+
+.api-error.visible {
+  display: block;
+}
