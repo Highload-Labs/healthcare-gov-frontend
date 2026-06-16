@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="assets/css/login.css" />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios-mock-adapter/dist/axios-mock-adapter.min.js"></script>
@@ -15,7 +15,7 @@
   <h1>Log In</h1>
   <p class="subtitle">
     Don't have an account?
-    <a href="#">Create an account</a>
+    <a href="register.html">Create an account</a>
   </p>
 
   <!-- Step 1 -->
@@ -77,7 +77,7 @@
 <!-- End of Workplace -->
 
 <script src="assets/js/client.js"></script>
-<script src="assets/js/mock.js"></script> <!-- Remove/Comment this when Backend is ready -->
+<script src="assets/js/mock.js"></script>
 <script src="assets/js/api.js"></script>
 
 <script>
@@ -124,7 +124,7 @@
       if (response.data?.data?.access_token) {
         localStorage.setItem('access_token', response.data.data.access_token);
         localStorage.setItem('refresh_token', response.data.data.refresh_token);
-        window.location.href = '/dashboard'; // ganti sesuai route kamu
+        window.location.href = 'preview-plans.html';
       }
     } catch (err) {
       apiError.classList.add('visible');

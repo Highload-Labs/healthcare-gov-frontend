@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Health & Dental Plans - 2026</title>
+    <link rel="stylesheet" href="assets/css/browse-plans.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="dashboard-layout">
+    <div class="sidebar">
+        <a href="index.html" class="back-link">← Back to steps</a>
+
+        <div class="summary-card">
+            <span class="badge">Active Search</span>
+            <div class="summary-location">
+                <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 0C3.13 0 0 3.13 0 7C0 12.25 7 18 7 18C7 18 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z" fill="#4B5563"/>
+                </svg>
+                <span id="display-zipcode">ZIP Code: 32024</span>
+            </div>
+            <div class="summary-region" id="display-state">State: Florida</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="content-header">
+            <div>
+                <h1>Explore available marketplace plans</h1>
+                <p class="subtitle">Based on your household size parameters, mock rates have been calculated below.</p>
+            </div>
+            <div class="auth-status-tag">
+                <div class="status-dot"></div>
+                <span>Authorized Session</span>
+            </div>
+        </header>
+
+        <div id="plans-container" class="plans-list">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Querying dynamic plans from your active Mock Adapter context...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-mock-adapter/dist/axios-mock-adapter.min.js"></script>
+<script src="assets/js/client.js"></script>
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/api.js"></script>
+
+<script>
+    const MOCK_TOKEN = localStorage.getItem('access_token') || "mock_jwt_token";
+    async function loadPlans() {
+        const container = document.getElementById('plans-container');
+        const zipDisplay = document.getElementById('display-zipcode');
+        const stateDisplay = document.getElementById('display-state');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetZipcode = urlParams.get('zipcode');
+
+        const finalZipcode = (targetZipcode && targetZipcode.length === 5) ? targetZipcode : "32024";
+
+        if (zipDisplay) {
+            zipDisplay.innerText = `ZIP Code: ${finalZipcode}`;
+        }
+
+        try {
+            if (typeof plansApi === 'undefined' || typeof coverageApi === 'undefined') {
+                throw new Error("Modul API (plansApi/coverageApi) belum siap di window context.");
+            }
+
+            const [coverageResponse, plansResponse] = await Promise.all([
+                coverageApi.checkCoverage(finalZipcode),
+                plansApi.getByZipcode(finalZipcode, MOCK_TOKEN)
+            ]);
+
+            const coverageData = coverageResponse.data.data;
+            const plans = plansResponse.data.data;
+
+            if (stateDisplay && coverageData && coverageData.state) {
+                stateDisplay.innerText = `State: ${coverageData.state}`;
+            }
+
+            container.innerHTML = '';
+
+            if (!plans || plans.length === 0) {
+                container.innerHTML = '<div class="info-msg">Tidak ada paket kesehatan yang tersedia untuk wilayah ini.</div>';
+                return;
+            }
+
+            plans.forEach(plan => {
+                const card = document.createElement('div');
+                card.className = 'plan-card';
+                card.innerHTML = `
+                <div class="plan-card-main">
+                  <div class="plan-badge">${plan.tier} Tier</div>
+                  <h2>${plan.name}</h2>
+                  <p class="provider-line">Provided by <strong>${plan.provider}</strong></p>
+                  <ul class="benefit-tags">
+                     <li>Emergency Services</li>
+                     <li>Prescription Drugs</li>
+                     <li>Preventive Care</li>
+                  </ul>
+                </div>
+                <div class="plan-card-metrics">
+                  <div class="premium-group">
+                    <span class="price">$${plan.monthly_premium.toFixed(2)}</span>
+                    <span class="per-month">/month</span>
+                  </div>
+                  <div class="metric-row"><span>Deductible:</span> <strong>$${plan.deductible}</strong></div>
+                  <div class="metric-row"><span>Out of pocket max:</span> <strong>$${plan.out_of_pocket_max}</strong></div>
+                  <button class="btn-enroll" onclick="executeEnrollment('${plan.id}')">Select Plan</button>
+                </div>
+            `;
+                container.appendChild(card);
+            });
+
+        } catch (err) {
+            console.error("Runtime Exception Trace:", err);
+            container.innerHTML = `
+            <div class="error-msg">
+                <strong>Gagal memuat catatan rekam medis dinamis.</strong><br>
+                <small style="opacity: 0.85;">Penyebab: ${err.message || "Network layout initialization mismatch"}</small>
+            </div>
+        `;
+        }
+    }
+
+    async function executeEnrollment(planId) {
+        // SweetAlert Processing Spinner
+        Swal.fire({
+            title: 'Processing Enrollment...',
+            text: `Submitting plan data, ID: ${planId}`,
+            icon: 'info',
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            // Execute cleanly via API object mapping
+            const res = await enrollmentApi.createEnrollment(planId, MOCK_TOKEN);
+            const enrollment = res.data.data;
+
+            // Success Popup Modifiers matching the theme color
+            Swal.fire({
+                title: 'Enrollment Confirmed!',
+                html: `
+            <div style="text-align: left; background: #f3f4f6; padding: 14px; border-radius: 6px; font-family: monospace; font-size: 13px; margin-top: 10px;">
+              <strong>Status:</strong> 201 Created<br>
+              <strong>Enrollment ID:</strong> ${enrollment.id}<br>
+              <strong>Plan Used:</strong> ${enrollment.plan_id}<br><br>
+              <strong style="color: #16a34a;">Coverage Window Starts:</strong><br>
+              ${new Date(enrollment.effective_date).toLocaleDateString()}
+            </div>
+          `,
+                icon: 'success',
+                confirmButtonText: 'Great, Thank You',
+                confirmButtonColor: '#16a34a',
+            });
+
+        } catch (err) {
+            // Error Handler Display configuration
+            Swal.fire({
+                title: 'Submission Error',
+                text: 'An exception error was caught on the target runtime loop interface.',
+                icon: 'error',
+                confirmButtonText: 'Dismiss',
+                confirmButtonColor: '#dc2626'
+            });
+        }
+    }
+
+    // Fire application load loop sequence
+    window.addEventListener('DOMContentLoaded', loadPlans);
+</script>
+</body>
+</html>

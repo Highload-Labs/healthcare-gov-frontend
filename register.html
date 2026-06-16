@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create an Account</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="register.css"/>
+  <link rel="stylesheet" href="assets/css/register.css"/>
 </head>
 <body>
   <div class="container">
@@ -200,6 +200,8 @@
       setLoading(true);
 
       try {
+        setLoading(true); // Memastikan state loading aktif saat request dikirim
+
         // 1️⃣  Register → POST /auth/register
         const registerRes = await authApi.register({
           first_name: firstName,
@@ -212,25 +214,20 @@
         const { user_id, created_at } = registerRes.data.data;
         console.log('Register success:', { user_id, created_at });
 
-        // 2️⃣  Auto-login setelah register → POST /auth/login
-        const loginRes = await authApi.login({ email, password });
+        // 2️⃣ Tampilkan pesan sukses menggunakan Toast/SweetAlert
+        showToast(`✅ Account created successfully! Please log in.`, '#2e7d32');
 
-        const { access_token, refresh_token, expires_in } = loginRes.data.data;
-
-        // Simpan token ke localStorage
-        localStorage.setItem('access_token',  access_token);
-        localStorage.setItem('refresh_token', refresh_token);
-
-        console.log('Login success:', { access_token, expires_in });
-
-        showToast(`✅ Account created! Welcome, ${firstName} ${lastName}.`, '#2e7d32');
+        // 3️⃣ Redirect ke halaman login.html setelah jeda singkat (misal: 1.5 detik)
+        // agar user sempat membaca pesan sukses di atas.
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
 
       } catch (err) {
         console.error('Error:', err);
         const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
         showToast(`❌ ${msg}`, '#b91c1c');
-      } finally {
-        setLoading(false);
+        setLoading(false); // Matikan loading hanya jika terjadi error agar tombol bisa ditekan kembali
       }
     }
   </script>
