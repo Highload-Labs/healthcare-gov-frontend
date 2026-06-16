@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create an Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Page Header -->
+    <h1 class="page-title">Create an Account</h1>
+    <p class="login-prompt">Already have account? <a href="#">Log in</a></p>
+
+    <!-- ======== STEP 1 ======== -->
+    <section class="step-section">
+      <div class="step-header">
+        <div class="step-badge">1</div>
+        <h2 class="step-title">See if your state uses HealthCare.gov</h2>
+      </div>
+      <p class="step-desc">Some states have their own Marketplace. Next, set up your login information.</p>
+
+      <div class="step-body">
+        <div class="field-group">
+          <label class="field-label" for="state">Pick the state you live in</label>
+
+          <!-- 🟠 DROPDOWN LIST -->
+          <select id="state" name="state" aria-label="Select your state">
+            <option value="" disabled selected>Select your state</option>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="IL">Illinois</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+            <option value="WA">Washington</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <hr class="step-divider"/>
+
+    <!-- ======== STEP 2 ======== -->
+    <section class="step-section">
+      <div class="step-header">
+        <div class="step-badge">2</div>
+        <h2 class="step-title">Set up your login information</h2>
+      </div>
+
+      <div class="step-body">
+
+        <!-- 🔵 TEXTFIELD: First Name -->
+        <div class="field-group">
+          <label class="field-label" for="first-name">First Name</label>
+          <input
+            type="text"
+            id="first-name"
+            name="first_name"
+            class="active-field"
+            autocomplete="given-name"
+            aria-label="First Name"
+          />
+        </div>
+
+        <!-- 🔵 TEXTFIELD: Last Name -->
+        <div class="field-group">
+          <label class="field-label" for="last-name">Last Name</label>
+          <input
+            type="text"
+            id="last-name"
+            name="last_name"
+            autocomplete="family-name"
+            aria-label="Last Name"
+          />
+        </div>
+
+        <!-- 🔵 TEXTFIELD: Email Address -->
+        <div class="field-group">
+          <label class="field-label" for="email">Email Address</label>
+          <p class="field-hint">Your email address will also be your username when you log in.</p>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="email"
+            aria-label="Email Address"
+          />
+        </div>
+
+        <!-- 🔵 TEXTFIELD: Password -->
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <p class="field-hint">Your new password must include:</p>
+          <ul class="pw-rules">
+            <li>Password doesn't include 8 to 20 characters.</li>
+            <li>doesn't include uppercase and lowercase letters.</li>
+            <li>Uppercase &amp; lowercase letters</li>
+            <li>1 or more numbers.</li>
+          </ul>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="new-password"
+            aria-label="Password"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 🟢 CHECKLIST -->
+    <div class="checkbox-group" style="padding-left:48px;">
+      <input type="checkbox" id="agree" name="agree"/>
+      <label for="agree">
+        I understand and agree with the HealthCare.gov
+        <a href="#">privacy policy</a> and <a href="#">terms and conditions</a>
+      </label>
+    </div>
+
+    <!-- Email Note -->
+    <p class="email-note">
+      The Marketplace will send you emails with important enrollment information, updates, and
+      reminders. You can unsubscribe at any time by selecting the 'Unsubscribe' link at the
+      bottom of any Marketplace email.
+    </p>
+
+    <!-- 🔴 BUTTON CREATE -->
+    <button class="btn-create" id="btn-create" type="button" onclick="handleCreate()">
+      Create Account
+    </button>
+
+    <!-- Toast Notifikasi -->
+    <div id="toast" style="
+      display:none; position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
+      background:#1a1a1a; color:#fff; padding:12px 24px; border-radius:6px;
+      font-size:0.88rem; font-family:'Source Sans 3',sans-serif; z-index:999;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18); min-width:260px; text-align:center;
+    "></div>
+  </div>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios-mock-adapter/dist/axios-mock-adapter.min.js"></script>
+
+  <!-- App scripts (urutan penting: client → mock → api) -->
+  <script src="assets/js/client.js"></script>
+  <script src="assets/js/mock.js"></script>
+  <script src="assets/js/api.js"></script>
+
+  <script>
+    // ---- Fokus field ----
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]')
+      .forEach(input => {
+        input.addEventListener('focus', () => input.classList.add('active-field'));
+        input.addEventListener('blur',  () => input.classList.remove('active-field'));
+      });
+
+    // ---- Toast helper ----
+    function showToast(message, color = '#1a1a1a') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = color;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    // ---- Set loading state pada button ----
+    function setLoading(isLoading) {
+      const btn = document.getElementById('btn-create');
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? 'Creating account…' : 'Create Account';
+      btn.style.opacity = isLoading ? '0.7' : '1';
+    }
+
+    // ---- Handle Create Account ----
+    async function handleCreate() {
+      const firstName = document.getElementById('first-name').value.trim();
+      const lastName  = document.getElementById('last-name').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const password  = document.getElementById('password').value;
+      const state     = document.getElementById('state').value;
+      const agreed    = document.getElementById('agree').checked;
+
+      // Validasi sisi klien
+      if (!state)     return showToast('⚠ Please select your state.', '#b45309');
+      if (!firstName) return showToast('⚠ Please enter your First Name.', '#b45309');
+      if (!lastName)  return showToast('⚠ Please enter your Last Name.', '#b45309');
+      if (!email)     return showToast('⚠ Please enter your Email Address.', '#b45309');
+      if (!password)  return showToast('⚠ Please enter a Password.', '#b45309');
+      if (!agreed)    return showToast('⚠ You must agree to the privacy policy and terms.', '#b45309');
+
+      setLoading(true);
+
+      try {
+        // 1️⃣  Register → POST /auth/register
+        const registerRes = await authApi.register({
+          first_name: firstName,
+          last_name:  lastName,
+          email,
+          password,
+          state
+        });
+
+        const { user_id, created_at } = registerRes.data.data;
+        console.log('Register success:', { user_id, created_at });
+
+        // 2️⃣  Auto-login setelah register → POST /auth/login
+        const loginRes = await authApi.login({ email, password });
+
+        const { access_token, refresh_token, expires_in } = loginRes.data.data;
+
+        // Simpan token ke localStorage
+        localStorage.setItem('access_token',  access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+
+        console.log('Login success:', { access_token, expires_in });
+
+        showToast(`✅ Account created! Welcome, ${firstName} ${lastName}.`, '#2e7d32');
+
+      } catch (err) {
+        console.error('Error:', err);
+        const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+        showToast(`❌ ${msg}`, '#b91c1c');
+      } finally {
+        setLoading(false);
+      }
+    }
+  </script>
+</body>
+</html>
