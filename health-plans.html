@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Plans - Malik UMM</title>
+  <link rel="stylesheet" href="assets/css/health-plans.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+
+<div class="bg-pattern">
+  <svg viewBox="0 0 1366 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" stroke-width="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="1366" height="800" fill="url(#grid)"/>
+    <circle cx="120" cy="200" r="90" fill="none" stroke="white" stroke-width="1"/>
+    <circle cx="120" cy="200" r="140" fill="none" stroke="white" stroke-width="0.5"/>
+    <circle cx="350" cy="650" r="70" fill="none" stroke="white" stroke-width="1"/>
+    <circle cx="350" cy="650" r="110" fill="none" stroke="white" stroke-width="0.5"/>
+    <circle cx="900" cy="100" r="60" fill="none" stroke="white" stroke-width="0.8"/>
+    <circle cx="1250" cy="700" r="80" fill="none" stroke="white" stroke-width="0.8"/>
+    <line x1="0" y1="0" x2="200" y2="200" stroke="white" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="0" y2="200" stroke="white" stroke-width="0.5"/>
+    <rect x="700" y="500" width="120" height="120" fill="none" stroke="white" stroke-width="0.5" transform="rotate(20 760 560)"/>
+    <rect x="1100" y="200" width="90" height="90" fill="none" stroke="white" stroke-width="0.5" transform="rotate(35 1145 245)"/>
+  </svg>
+</div>
+
+<div class="left-panel">
+</div>
+
+<div class="right-panel">
+  <div class="modal-card">
+    <h1>See plans &amp; prices</h1>
+    <p class="subtitle">Get estimated prices on 2026 health plans before you apply</p>
+    <p class="subtitle">You can browse plans and estimated prices here any time. Next, <a href="#">create</a> or <a href="#">login to your marketplace</a> to apply, get final prices, and enroll.</p>
+
+    <div class="alert-box">
+      <div class="alert-title">Life changes? You can still get 2026 health insurance</div>
+      <div class="alert-body">You can enroll or change plans only if you have certain <a href="#">life changes</a>, or qualify for Medicaid or the Children's Health Insurance Program (CHIP).</div>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label" for="zipCode">Enter your ZIP Code &amp; choose your location:</label>
+      <div class="input-row">
+        <input
+                type="text"
+                id="zipCode"
+                class="zip-input"
+                placeholder="e.g. 10001"
+                maxlength="5"
+                inputmode="numeric"
+                pattern="[0-9]*"
+        />
+        <button class="btn-continue" onclick="handleContinue()">CONTINUE</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="footer-note">Your information is protected and never shared without consent.</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios-mock-adapter/dist/axios-mock-adapter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  if (typeof http === 'undefined') {
+    window.http = axios.create();
+  }
+</script>
+
+<script src="assets/js/client.js"></script>
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/api.js"></script>
+
+<script>
+  async function handleContinue() {
+    const zipInput = document.getElementById('zipCode');
+    const zip = zipInput.value.trim();
+
+    // Validasi Awal: Memastikan panjang input harus tepat 5 digit angka
+    if (!zip || zip.length < 5) {
+      zipInput.focus();
+      zipInput.style.borderColor = '#ef4444';
+      zipInput.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+
+      Swal.fire({
+        title: 'ZIP Code Tidak Valid',
+        text: 'Silakan masukkan 5 digit nomor kode pos yang benar.',
+        icon: 'warning',
+        confirmButtonColor: '#2563eb'
+      });
+
+      setTimeout(() => {
+        zipInput.style.borderColor = '#d1d5db';
+        zipInput.style.boxShadow = 'none';
+      }, 1500);
+      return;
+    }
+
+    // Tampilkan Loading Spinner saat mengecek cakupan wilayah via Mock API
+    Swal.fire({
+      title: 'Memeriksa Wilayah...',
+      text: `Menghubungi API coverage untuk ZIP Code: ${zip}`,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    try {
+      // Menggunakan mapping terpusat dari coverageApi di assets/js/api.js
+      if (typeof coverageApi === 'undefined') {
+        throw new Error("Modul coverageApi tidak ditemukan. Periksa kembali assets/js/api.js");
+      }
+
+      const response = await coverageApi.checkCoverage(zip);
+      const coverage = response.data.data;
+
+      if (coverage.supported) {
+        // Jika wilayah didukung, beri notifikasi sukses berdurasi singkat lalu arahkan halaman
+        Swal.fire({
+          title: 'Wilayah Didukung!',
+          text: `Lokasi ditemukan: ${coverage.state}. Membuka daftar paket...`,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
+        setTimeout(() => {
+          // REDIRECT: Mengarahkan ke browse-plans.html dengan membawa parameter ?zipcode=xxxxx
+          window.location.href = `browse-plans.html?zipcode=${coverage.zipcode}`;
+        }, 1300);
+
+      } else {
+        Swal.fire({
+          title: 'Wilayah Belum Didukung',
+          text: 'Maaf, layanan asuransi kesehatan belum tersedia di kode pos tersebut.',
+          icon: 'error',
+          confirmButtonColor: '#dc2626'
+        });
+      }
+
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: 'Koneksi Gagal',
+        text: err.message || 'Gagal memuat data dari context mock server.',
+        icon: 'error',
+        confirmButtonColor: '#dc2626'
+      });
+    }
+  }
+
+  // Batasi inputan agar hanya menerima angka dan maksimal 5 karakter
+  document.getElementById('zipCode').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+  });
+
+  // Listener tombol Enter
+  document.getElementById('zipCode').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleContinue();
+  });
+</script>
+</body>
+</html>
